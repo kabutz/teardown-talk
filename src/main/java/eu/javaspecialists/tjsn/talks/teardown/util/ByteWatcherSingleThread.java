@@ -18,7 +18,7 @@ public class ByteWatcherSingleThread {
 
     private final Object[] PARAMS;
     private final AtomicLong allocated = new AtomicLong();
-    private final long MEASURING_COST_IN_BYTES; // usually 336
+    private final static long TYPICAL_COST_IN_BYTES = 336;
     private final long tid;
     private final boolean checkThreadSafety;
 
@@ -36,10 +36,6 @@ public class ByteWatcherSingleThread {
         this(Thread.currentThread(), true);
     }
 
-    public ByteWatcherSingleThread(Thread thread) {
-        this(thread, false);
-    }
-
     private ByteWatcherSingleThread(
         Thread thread, boolean checkThreadSafety) {
         this.checkThreadSafety = checkThreadSafety;
@@ -47,32 +43,11 @@ public class ByteWatcherSingleThread {
         this.thread = thread;
         threadName = thread.getName();
         PARAMS = new Object[]{tid};
-
-        long calibrate = threadAllocatedBytes();
-        // calibrate
-        for (int repeats = 0; repeats < 10; repeats++) {
-            for (int i = 0; i < 10_000; i++) {
-                // run a few loops to allow for startup anomalies
-                calibrate = threadAllocatedBytes();
-            }
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            }
-        }
-        MEASURING_COST_IN_BYTES = threadAllocatedBytes() - calibrate;
         reset();
-    }
-
-    public long getMeasuringCostInBytes() {
-        return MEASURING_COST_IN_BYTES;
     }
 
     public void reset() {
         checkThreadSafety();
-
         allocated.set(threadAllocatedBytes());
     }
 
@@ -96,7 +71,7 @@ public class ByteWatcherSingleThread {
     public long calculateAllocations() {
         checkThreadSafety();
         long mark1 = ((threadAllocatedBytes() -
-            MEASURING_COST_IN_BYTES) - allocated.get());
+                TYPICAL_COST_IN_BYTES) - allocated.get());
         return mark1;
     }
 
