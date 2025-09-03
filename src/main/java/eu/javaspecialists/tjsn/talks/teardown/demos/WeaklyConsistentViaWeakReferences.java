@@ -6,8 +6,8 @@ import java.util.concurrent.*;
 
 public class WeaklyConsistentViaWeakReferences {
     public static void main(String... args) {
-        // var queue = new LinkedBlockingQueue<>(10);
-        var queue = new ArrayBlockingQueue<Integer>(10);
+        var queue = new LinkedBlockingQueue<>(10);
+        // var queue = new ArrayBlockingQueue<Integer>(10);
         Collections.addAll(queue, 1, 2, 3, 4, 5);
         var iterator = queue.iterator();
         for (int i = 0; i < 3; i++) System.out.println(iterator.next()); // 1,2,3
