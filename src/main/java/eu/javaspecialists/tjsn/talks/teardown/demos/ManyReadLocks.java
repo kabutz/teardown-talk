@@ -8,7 +8,6 @@ public class ManyReadLocks {
     public static void main(String[] args) {
         var rwlock = new ReentrantReadWriteLock();
         var largestReaderCount = new LongAccumulator(Long::max, 0L);
-        var done = new AtomicBoolean(false);
         var error = new AtomicReference<Throwable>();
         try (var pool = Executors.newVirtualThreadPerTaskExecutor()) {
             var readers = 100_000;
