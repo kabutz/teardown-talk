@@ -15,37 +15,49 @@ public class ForEachDeadlocks {
             var c2 = new Vector<String>();
             Collections.addAll(c1, "a", "b", "c");
             Collections.addAll(c2, "d", "e", "f");
-            Thread.ofPlatform().start(() -> c1.forEach(e -> {
-                LockSupport.parkNanos(10_000_000);
-                c2.contains(e);
-            }));
-            Thread.ofPlatform().start(() -> c2.forEach(e -> {
-                LockSupport.parkNanos(10_000_000);
-                c1.contains(e);
-            }));
+            Thread.Builder builder = Thread.ofVirtual();
+            Thread t1 = builder
+                    .name("c1")
+                    .start(() -> c1.forEach(e -> {
+                        LockSupport.parkNanos(10_000_000);
+                        c2.contains(e);
+                    }));
+            Thread t2 = builder
+                    .name("c2")
+                    .start(() -> c2.forEach(e -> {
+                        LockSupport.parkNanos(10_000_000);
+                        c1.contains(e);
+                    }));
             LockSupport.parkNanos(30_000_000);
-        });
-        testForDeadlocksRunnable(() -> {
-            // adapted from https://bugs.openjdk.org/browse/JDK-6205425
-            System.out.println("Testing Vector.equals() between two vectors");
-            var v1 = new Vector<String>();
-            var v2 = new Vector<String>();
-            Collections.addAll(v1, "a", "b", "c");
-            Collections.addAll(v2, "d", "e", "f");
-            Thread.ofPlatform().start(() -> {
-                for (int i = 0; i < 10_000; i++) {
-                    v1.equals(v2);
-                }
-            });
-            Thread.ofPlatform().start(() -> {
-                for (int i = 0; i < 10_000; i++) {
-                    v2.equals(v1);
-                }
-            });
-            LockSupport.parkNanos(30_000_000);
-        });
 
-        System.exit(0);
+            try {
+                t1.join();
+                t2.join();
+            } catch (InterruptedException e) {
+                throw new CancellationException();
+            }
+        });
+        // testForDeadlocksRunnable(() -> {
+        //     // adapted from https://bugs.openjdk.org/browse/JDK-6205425
+        //     System.out.println("Testing Vector.equals() between two vectors");
+        //     var v1 = new Vector<String>();
+        //     var v2 = new Vector<String>();
+        //     Collections.addAll(v1, "a", "b", "c");
+        //     Collections.addAll(v2, "d", "e", "f");
+        //     Thread.ofPlatform().start(() -> {
+        //         for (int i = 0; i < 10_000; i++) {
+        //             v1.equals(v2);
+        //         }
+        //     });
+        //     Thread.ofPlatform().start(() -> {
+        //         for (int i = 0; i < 10_000; i++) {
+        //             v2.equals(v1);
+        //         }
+        //     });
+        //     LockSupport.parkNanos(30_000_000);
+        // });
+
+        // System.exit(0);
     }
 
     private static void testForDeadlocksRunnable(Runnable deadlockableCode) {
