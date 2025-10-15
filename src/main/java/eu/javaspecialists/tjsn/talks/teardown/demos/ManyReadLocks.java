@@ -3,11 +3,12 @@ package eu.javaspecialists.tjsn.talks.teardown.demos;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.*;
+import java.util.stream.*;
 
 public class ManyReadLocks {
     public static void main(String[] args) {
         var rwlock = new ReentrantReadWriteLock();
-        var largestReaderCount = new LongAccumulator(Long::max, 0L);
+        var maxReaders = new LongAccumulator(Long::max, 0L);
         var done = new AtomicBoolean(false);
         var error = new AtomicReference<Throwable>();
         try (var pool = Executors.newVirtualThreadPerTaskExecutor()) {
@@ -18,7 +19,7 @@ public class ManyReadLocks {
                     try {
                         rwlock.readLock().lock();
                         try {
-                            largestReaderCount.accumulate(rwlock.getReadLockCount());
+                            maxReaders.accumulate(rwlock.getReadLockCount());
                             count.incrementAndGet();
                             while (error.get() == null && count.get() < readers)
                                 Thread.sleep(100);
@@ -31,7 +32,7 @@ public class ManyReadLocks {
                 });
             }
         }
-        System.out.println("largestReaderCount = " + largestReaderCount);
+        System.out.println("maxReaders = " + maxReaders);
         if (error.get() != null) error.get().printStackTrace();
     }
 }

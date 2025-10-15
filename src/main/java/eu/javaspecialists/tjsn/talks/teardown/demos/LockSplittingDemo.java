@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 
 public class LockSplittingDemo {
     protected static final int ELEMENTS = 10_000_000;
-    protected static final int NUMBER_OF_CONSUMERS = 1;
+    protected static final int NUMBER_OF_CONSUMERS = 8;
 
     public static void main(String... args) throws InterruptedException {
         // TODO: submit 10m Integers to a BlockingQueue, with either SPSC or SPMC
