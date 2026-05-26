@@ -1,6 +1,6 @@
 package eu.javaspecialists.tjsn.talks.teardown.demos;
 
-public class LockSplittingDemo {
+public class Demo4_LockSplittingDemo {
     public static void main(String... args) throws InterruptedException {
         // TODO: submit 10m Integers to a BlockingQueue, with either SPSC or SPMC
         //  Use LinkedBlockingQueue, LinkedBlockingDeque and ArrayBlockingQueue

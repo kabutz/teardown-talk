@@ -4,7 +4,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.*;
 
-public class ManyReadLocks {
+public class Demo2_ManyReadLocks {
     public static void main(String[] args) {
         var rwlock = new ReentrantReadWriteLock();
         var largestReaderCount = new LongAccumulator(Long::max, 0L);

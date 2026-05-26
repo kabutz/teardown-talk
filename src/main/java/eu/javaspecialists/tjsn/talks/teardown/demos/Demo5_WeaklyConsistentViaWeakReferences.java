@@ -4,7 +4,7 @@ package eu.javaspecialists.tjsn.talks.teardown.demos;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class WeaklyConsistentViaWeakReferences {
+public class Demo5_WeaklyConsistentViaWeakReferences {
     public static void main(String... args) {
         // var queue = new LinkedBlockingQueue<>(10);
         var queue = new ArrayBlockingQueue<Integer>(10);

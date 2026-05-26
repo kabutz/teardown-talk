@@ -4,6 +4,6 @@ import eu.javaspecialists.tjsn.talks.teardown.startinggun.*;
 
 public class StartingGunAQSTest extends StartingGunTest {
     protected StartingGun create() {
-        return new StartingGunAQS();
+        return new Demo3_StartingGunAQS();
     }
 }
