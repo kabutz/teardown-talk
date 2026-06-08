@@ -5,6 +5,8 @@ import java.util.stream.*;
 
 public class Demo1_Striped64 {
     public static void main(String... args) {
+        // link: https://javaspecialists.teachable.com/p/data-structures?coupon_code=COMMERZBANK-2026
+
         // TODO: Compare time taken to increment 100m times in parallel
         //  using AtomicLong and LongAdder
         var atomicLong = new AtomicLong();
