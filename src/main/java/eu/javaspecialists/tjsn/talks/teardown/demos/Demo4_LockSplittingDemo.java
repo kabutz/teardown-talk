@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 
 public class Demo4_LockSplittingDemo {
     protected static final int ELEMENTS = 10_000_000;
-    protected static final int NUMBER_OF_CONSUMERS = 1;
+    protected static final int NUMBER_OF_CONSUMERS = 2;
     public static void main(String... args) throws InterruptedException {
         // TODO: submit 10m Integers to a BlockingQueue, with either SPSC or SPMC
         //  Use LinkedBlockingQueue, LinkedBlockingDeque and ArrayBlockingQueue
@@ -15,8 +15,8 @@ public class Demo4_LockSplittingDemo {
         // TODO: Show how the two locks work in enqueue and dequeue
 
         for (int i = 0; i < 10; i++) {
-            test(new LinkedBlockingQueue<>());
-            // test(new LinkedBlockingDeque<>());
+            // test(new LinkedBlockingQueue<>());
+            test(new LinkedBlockingDeque<>());
             // test(new ArrayBlockingQueue<>(100_000));
         }
     }
